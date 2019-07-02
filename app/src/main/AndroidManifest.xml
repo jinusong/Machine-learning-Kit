@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".TextActivity"/>
         <activity android:name=".TransActivity"/>
+        <activity android:name=".FaceActivity"/>
 
 
         <meta-data
