@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.jinwoo.machine_learning_kit">
+
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -17,6 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".TextActivity"/>
+        <activity android:name=".TransActivity"/>
+
+
+        <meta-data
+                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+                android:value="ocr" />
+        <!-- To use multiple models: android:value="ocr,model2,model3" -->
+
     </application>
 
 </manifest>
