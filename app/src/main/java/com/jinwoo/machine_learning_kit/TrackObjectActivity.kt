@@ -11,23 +11,19 @@ import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.google.firebase.ml.vision.objects.FirebaseVisionObject
+import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions
 import com.google.firebase.ml.vision.text.FirebaseVisionText
-import kotlinx.android.synthetic.main.activity_face.*
+import kotlinx.android.synthetic.main.activity_track_object.*
+import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.toast
-import android.graphics.PointF
-import com.google.firebase.ml.vision.face.FirebaseVisionFace
-import org.jetbrains.anko.imageBitmap
 
-
-class FaceActivity : AppCompatActivity() {
-
+class TrackObjectActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_face)
-
-        face_ocr_btn.onClick {
+        setContentView(R.layout.activity_track_object)
+        object_ocr_btn.onClick {
             val intent = Intent(Intent.ACTION_PICK)
             intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
             startActivityForResult(intent, 200)
@@ -44,17 +40,17 @@ class FaceActivity : AppCompatActivity() {
     fun ocrText(bitmap: Bitmap) {
         val image = FirebaseVisionImage.fromBitmap(bitmap)
 
-        val options = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
-            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+        val options = FirebaseVisionObjectDetectorOptions.Builder()
+            .setDetectorMode(FirebaseVisionObjectDetectorOptions.SINGLE_IMAGE_MODE)
+            .enableMultipleObjects()
+            .enableClassification()
             .build()
 
-        val detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
+        val detector = FirebaseVision.getInstance().getOnDeviceObjectDetector(options)
 
-
-        detector.detectInImage(image)
+        detector.processImage(image)
             .addOnSuccessListener {
-                face_ocr_tv.text = ""
+                object_ocr_tv.text = ""
                 val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
                 findText(it, mutableBitmap)
             }
@@ -62,27 +58,21 @@ class FaceActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun findText(result: List<FirebaseVisionFace>, image: Bitmap) {
+    fun findText(result: List<FirebaseVisionObject>, image: Bitmap) {
         val canvas = Canvas(image)
         val rectPaint = Paint()
         rectPaint.color = Color.RED
         rectPaint.style = Paint.Style.STROKE
         rectPaint.strokeWidth = 4F
-        val textPaint = Paint()
-        textPaint.color = Color.RED
-        textPaint.textSize = 40F
 
-        for (face in result) {
-            canvas.drawRect(face.boundingBox, rectPaint)
-            face_ocr_tv.text = face_ocr_tv.text.toString() +
-                "rotY: ${face.headEulerAngleY}\n " +
-                        "rotZ: ${face.headEulerAngleZ}\n" +
-                        "smileProb: ${face.smilingProbability}\n" +
-                        "leftEyeOpen: ${face.leftEyeOpenProbability}\n" +
-                        "rightEyeOpen: ${face.rightEyeOpenProbability}\n" +
-                        "id: ${face.trackingId}\n\n\n"
+        for (obj in result) {
+            canvas.drawRect(obj.boundingBox, rectPaint)
+            object_ocr_tv.text = object_ocr_tv.text.toString() +
+                    "id: ${obj.trackingId}\n " +
+                    "category: ${obj.classificationCategory}\n" +
+                    "confidence: ${obj.classificationConfidence}\n\n\n"
         }
 
-        face_ocr_img.imageBitmap = image
+        object_ocr_img.imageBitmap = image
     }
 }

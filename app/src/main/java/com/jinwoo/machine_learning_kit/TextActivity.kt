@@ -1,6 +1,5 @@
 package com.jinwoo.machine_learning_kit
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -8,22 +7,13 @@ import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import kotlinx.android.synthetic.main.activity_text.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
-import java.util.*
-import android.R.attr.data
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
-import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
-import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
-import org.jetbrains.anko.find
 import org.jetbrains.anko.imageBitmap
 
 

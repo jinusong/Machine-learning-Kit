@@ -14,5 +14,7 @@ class MainActivity: AppCompatActivity() {
         main_trans_btn.onClick { startActivity<TransActivity>() }
         main_text_btn.onClick { startActivity<TextActivity>() }
         main_face_btn.onClick { startActivity<FaceActivity>() }
+        main_object_btn.onClick { startActivity<TrackObjectActivity>() }
+
     }
 }
